@@ -47,10 +47,45 @@
 
 
 /*
- *
- * Slider Default
- */
+*
+* Slider Default
+*/
+$fable_axtra_activated_theme = wp_get_theme(); // gets the current theme
+if( 'EazyShop' == $fable_axtra_activated_theme->name){
  function shopire_slider_data_options_default() {
+	return apply_filters(
+		'shopire_slider_data_options_default', json_encode(
+				 array(
+				array(
+					'image_url'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/banner-01.png'),
+					'title'           => esc_html__( 'HUAWEI Phones', 'fable-extra' ),
+					'subtitle'         => esc_html__( 'From $629 <br>Offer Limited', 'fable-extra' ),
+					'text2'	  =>  esc_html__( 'Shop Now', 'fable-extra' ),
+					'link'	  =>  esc_html__( '#', 'fable-extra' ),
+					'id'              => 'shopire_customizer_repeater_slider_data_001'
+				),
+				array(
+					'image_url'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/banner-02.png'),
+					'title'           => esc_html__( '100% Wooden', 'fable-extra' ),
+					'subtitle'         => esc_html__( 'Table Cabinet', 'fable-extra' ),
+					'text2'	  =>  esc_html__( 'Shop Now', 'fable-extra' ),
+					'link'	  =>  esc_html__( '#', 'fable-extra' ),
+					'id'              => 'shopire_customizer_repeater_slider_data_002'
+				),
+				array(
+					'image_url'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/banner-03.png'),
+					'title'           => esc_html__( 'Top Deals', 'fable-extra' ),
+					'subtitle'         => esc_html__( 'Honor Speaker', 'fable-extra' ),
+					'text2'	  =>  esc_html__( 'Shop Now', 'fable-extra' ),
+					'link'	  =>  esc_html__( '#', 'fable-extra' ),
+					'id'              => 'shopire_customizer_repeater_slider_data_003'
+				)
+			)
+		)
+	);
+}
+}else{
+   function shopire_slider_data_options_default() {
 	return apply_filters(
 		'shopire_slider_data_options_default', json_encode(
 				 array(
@@ -73,6 +108,7 @@
 			)
 		)
 	);
+}		
 }
 
 /*

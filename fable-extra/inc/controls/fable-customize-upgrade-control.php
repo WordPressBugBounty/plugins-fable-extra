@@ -43,6 +43,8 @@ class Fable_Extra_Customize_Upgrade_Control extends WP_Customize_Control {
 		$fable_activated_theme = wp_get_theme(); // gets the current theme
 		if('MiniCart' == $fable_activated_theme->name):
 			$upgrade_to_pro_link = 'https://wpfable.com/themes/minicart-premium/';
+		elseif('EazyShop' == $fable_activated_theme->name):	
+			$upgrade_to_pro_link = 'https://wpfable.com/themes/eazyshop-premium/';	
 		else:	
 			$upgrade_to_pro_link = 'https://wpfable.com/themes/shopire-premium/';
 		endif;	

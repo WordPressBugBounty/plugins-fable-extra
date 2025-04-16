@@ -2,6 +2,8 @@
 $fable_extra_activated_theme = wp_get_theme(); // gets the current theme
 if ( 'MiniCart' == $fable_extra_activated_theme->name){
 $site_logo = WPFE_URL .'inc/themes/minicart/assets/images/logo.png';
+}elseif ( 'EazyShop' == $fable_extra_activated_theme->name){
+$site_logo = WPFE_URL .'inc/themes/eazyshop/assets/images/logo.png';	
 }else{
 $site_logo = WPFE_URL .'inc/themes/shopire/assets/images/logo.png';
 }		
