@@ -23,7 +23,7 @@ function fable_extra_quick_view_callback() {
         <div id="product-<?php echo esc_attr($fable_extra_product_d); ?>" class="quickview-product product">
             <div class="product-thumb img-thumbnail">
                 <?php if ( $product->is_on_sale() ) : ?>
-                    <?php echo apply_filters( 'woocommerce_sale_flash', '<span class="onsale">' . esc_html__( 'Sale', 'shopire' ) . '</span>', $product ); ?>
+                    <?php echo apply_filters( 'woocommerce_sale_flash', '<span class="onsale">' . esc_html__( 'Sale', 'fable-extra' ) . '</span>', $product ); ?>
                 <?php endif; ?>
 
                 <div class="woocommerce-product-gallery woocommerce-product-gallery--with-images woocommerce-product-gallery--columns-4 images" data-columns="4">
@@ -82,7 +82,7 @@ function fable_extra_quick_view_callback() {
                             <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Quantity" class="input-text qty text" size="4">
                         </div>
                         <button type="submit" data-quantity="1" data-product_id="<?php echo $fable_extra_product_d; ?>" class="button alt ajax_add_to_cart add_to_cart_button product_type_simple">
-                            <?php esc_html_e( 'Add to cart', 'shopire' ); ?>
+                            <?php esc_html_e( 'Add to cart', 'fable-extra' ); ?>
                         </button>
                     </form>
 

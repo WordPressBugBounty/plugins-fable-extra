@@ -3,7 +3,7 @@
 Plugin Name: Fable Extra
 Plugin URI: 
 Description: Used for WP Fable Themes.
-Version: 1.0.6
+Version: 1.0.7
 Author: WP Fable
 Author URI: https://wpfable.com/
 Tested up to: 6.8

@@ -13,7 +13,7 @@ if($shopire_slider_options_hide_show=='1'):
 				<?php do_action('shopire_header_bcat'); ?>
 			</div>
 			<?php endif; ?>
-			<div class="wf-col-lg-<?php if(class_exists( 'woocommerce' ) && $shopire_hs_hdr_bcat=='1'): esc_attr_e('6','fable-extra'); else: esc_attr_e('8','fable-extra'); endif; ?> wf-col-12">
+			<div class="wf-col-lg-<?php if(class_exists( 'woocommerce' ) && $shopire_hs_hdr_bcat=='1'): esc_attr_e('6','fable-extra'); else: esc_attr_e('9','fable-extra'); endif; ?> wf-col-12">
 				<div class="wf_owl_carousel owl-theme owl-carousel slider" data-owl-options='{
 					"loop": true,
 					"animateOut": "fadeOut",
@@ -86,7 +86,7 @@ if($shopire_slider_options_hide_show=='1'):
 					<?php } } ?>
 				</div>
 			</div>
-			<div class="wf-col-lg-<?php if(class_exists( 'woocommerce' ) && $shopire_hs_hdr_bcat=='1'): esc_attr_e('3','fable-extra'); else: esc_attr_e('4','fable-extra'); endif; ?> wf-col-12">
+			<div class="wf-col-lg-<?php if(class_exists( 'woocommerce' ) && $shopire_hs_hdr_bcat=='1'): esc_attr_e('3','fable-extra'); else: esc_attr_e('3','fable-extra'); endif; ?> wf-col-12">
 				<div class="banner-wrapper">
 					<?php
 						if ( ! empty( $shopire_slider_data_option ) ) {

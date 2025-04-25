@@ -7,7 +7,7 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 	$wp_customize->add_section(
         'shopire_footer_top_options',
         array(
-            'title' 		=> __('Footer Top','shopire'),
+            'title' 		=> __('Footer Top','fable-extra'),
 			'panel'  		=> 'footer_options',
 			'priority'      => 2,
 		)
@@ -25,7 +25,7 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 	'shopire_footer_top_head',
 		array(
 			'type' => 'hidden',
-			'label' => __('Footer Top','shopire'),
+			'label' => __('Footer Top','fable-extra'),
 			'section' => 'shopire_footer_top_options',
 			'priority' => 2,
 		)
@@ -45,7 +45,7 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 	$wp_customize->add_control(
 	'shopire_hs_footer_top', 
 		array(
-			'label'	      => esc_html__( 'Hide/Show ?', 'shopire' ),
+			'label'	      => esc_html__( 'Hide/Show ?', 'fable-extra' ),
 			'section'     => 'shopire_footer_top_options',
 			'type'        => 'checkbox'
 		) 
@@ -65,7 +65,7 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 	'shopire_footer_top_content_head',
 		array(
 			'type' => 'hidden',
-			'label' => __('Content','shopire'),
+			'label' => __('Content','fable-extra'),
 			'section' => 'shopire_footer_top_options',
 		)
 	);
@@ -83,10 +83,10 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 		new Shopire_Repeater( $wp_customize, 
 			'shopire_footer_top_ct_option', 
 				array(
-					'label'   => esc_html__('Contact','shopire'),
+					'label'   => esc_html__('Contact','fable-extra'),
 					'section' => 'shopire_footer_top_options',
-					'add_field_label'                   => esc_html__( 'Add New Contact', 'shopire' ),
-					'item_name'                         => esc_html__( 'Contact', 'shopire' ),
+					'add_field_label'                   => esc_html__( 'Add New Contact', 'fable-extra' ),
+					'item_name'                         => esc_html__( 'Contact', 'fable-extra' ),
 					
 					'customizer_repeater_title_control' => true,
 					'customizer_repeater_text_control' => true,

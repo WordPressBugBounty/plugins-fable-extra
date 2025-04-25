@@ -3,15 +3,16 @@ function fable_extra_product_search_scripts_styles(){
     if (class_exists("Woocommerce")) {
 
         wp_enqueue_style( 'fable-extra-product-search-style', WPFE_URL . '/inc/woo-features/assets/css/fable-extra-product-search.css', array(), '1.0.0' );
-        wp_enqueue_script( 'fable-extra-product-search-main', WPFE_URL . '/inc/woo-features/assets/js/fable-extra-product-search.js', array('jquery'), '', true);
-        wp_localize_script(
-            'fable-extra-product-search-main',
-            'opt',
-            array(
-                'ajaxUrl'   => admin_url('admin-ajax.php'),
-                'noResults' => esc_html__( 'No products found', 'fable-extra' ),
-            )
-        );
+        wp_enqueue_script('fable-extra-product-search-main', WPFE_URL . '/inc/woo-features/assets/js/fable-extra-product-search.js', array('jquery'),'',true);
+		wp_localize_script(
+			'fable-extra-product-search-main',
+			'opt',
+			array(
+				'ajaxUrl'   => admin_url('admin-ajax.php'),
+				'noResults' => esc_html__( 'No products found', 'fable-extra' ),
+				'nonce'     => wp_create_nonce('fable_search_nonce') // ✅ Add this line
+			)
+		);
     }
 }
 add_action( 'wp_enqueue_scripts', 'fable_extra_product_search_scripts_styles' );
@@ -125,178 +126,130 @@ add_action( 'wp_enqueue_scripts', 'fable_extra_product_search_scripts_styles' );
 /*-------------------*/
 
     function fable_extra_search_product() {
+		check_ajax_referer('fable_search_nonce', '_ajax_nonce'); // ✅ CSRF protection
 
-        global $wpdb, $woocommerce;
+		global $wpdb;
 
-        if (isset($_POST['keyword']) && !empty($_POST['keyword'])) {
+		if (isset($_POST['keyword']) && !empty($_POST['keyword'])) {
+			$keyword = sanitize_text_field($_POST['keyword']);
+			$like_keyword = '%' . $wpdb->esc_like($keyword) . '%';
 
-            $keyword = $_POST['keyword'];
+			$querystr = '';
+			$query_params = [];
 
-            if (isset($_POST['category']) && !empty($_POST['category'])) {
+			if (isset($_POST['category']) && !empty($_POST['category'])) {
+				$category = intval($_POST['category']);
 
-                $category = $_POST['category'];
+				$querystr = "
+					SELECT DISTINCT p.* FROM $wpdb->posts AS p
+					LEFT JOIN $wpdb->term_relationships AS r ON (p.ID = r.object_id)
+					INNER JOIN $wpdb->term_taxonomy AS x ON (r.term_taxonomy_id = x.term_taxonomy_id)
+					INNER JOIN $wpdb->terms AS t ON (r.term_taxonomy_id = t.term_id)
+					WHERE p.post_type = 'product'
+					AND p.post_status = 'publish'
+					AND x.taxonomy = 'product_cat'
+					AND (
+						x.term_id = %d
+						OR x.parent = %d
+					)
+					AND (
+						p.ID IN (
+							SELECT post_id FROM $wpdb->postmeta
+							WHERE meta_key = '_sku' AND meta_value LIKE %s
+						)
+						OR p.post_content LIKE %s
+						OR p.post_title LIKE %s
+					)
+					ORDER BY t.name ASC, p.post_date DESC
+				";
 
-                $querystr = "SELECT DISTINCT * FROM $wpdb->posts AS p
-                LEFT JOIN $wpdb->term_relationships AS r ON (p.ID = r.object_id)
-            	INNER JOIN $wpdb->term_taxonomy AS x ON (r.term_taxonomy_id = x.term_taxonomy_id)
-            	INNER JOIN $wpdb->terms AS t ON (r.term_taxonomy_id = t.term_id)
-            	WHERE p.post_type IN ('product')
-            	AND p.post_status = 'publish'
-                AND x.taxonomy = 'product_cat'
-            	AND (
-                    (x.term_id = {$category})
-                    OR
-                    (x.parent = {$category})
-                )
-                AND (
-                    (p.ID IN (SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_sku' AND meta_value LIKE '%{$keyword}%'))
-                    OR
-                    (p.post_content LIKE '%{$keyword}%')
-                    OR
-                    (p.post_title LIKE '%{$keyword}%')
-                )
-            	ORDER BY t.name ASC, p.post_date DESC;";
+				$query_params = [$category, $category, $like_keyword, $like_keyword, $like_keyword];
 
-            } else {
-                $querystr = "SELECT DISTINCT $wpdb->posts.*
-                FROM $wpdb->posts, $wpdb->postmeta
-                WHERE $wpdb->posts.ID = $wpdb->postmeta.post_id
-                AND (
-                    ($wpdb->postmeta.meta_key = '_sku' AND $wpdb->postmeta.meta_value LIKE '%{$keyword}%')
-                    OR
-                    ($wpdb->posts.post_content LIKE '%{$keyword}%')
-                    OR
-                    ($wpdb->posts.post_title LIKE '%{$keyword}%')
-                )
-                AND $wpdb->posts.post_status = 'publish'
-                AND $wpdb->posts.post_type = 'product'
-                ORDER BY $wpdb->posts.post_date DESC";
-            }
+			} else {
+				$querystr = "
+					SELECT DISTINCT p.* FROM $wpdb->posts AS p
+					INNER JOIN $wpdb->postmeta AS m ON (p.ID = m.post_id)
+					WHERE p.post_status = 'publish'
+					AND p.post_type = 'product'
+					AND (
+						(m.meta_key = '_sku' AND m.meta_value LIKE %s)
+						OR (p.post_content LIKE %s)
+						OR (p.post_title LIKE %s)
+					)
+					ORDER BY p.post_date DESC
+				";
 
-            $query_results = $wpdb->get_results($querystr);
+				$query_params = [$like_keyword, $like_keyword, $like_keyword];
+			}
 
-            if (!empty($query_results)) {
+			$query = $wpdb->prepare($querystr, $query_params);
+			$query_results = $wpdb->get_results($query);
 
-                $output = '';
+			if (!empty($query_results)) {
+				$output = '';
 
-                foreach ($query_results as $result) {
-					//echo print_r($result);die;
+				foreach ($query_results as $result) {
+					$price = get_post_meta($result->ID, '_regular_price', true);
+					$price_sale = get_post_meta($result->ID, '_sale_price', true);
+					$currency = get_woocommerce_currency_symbol();
+					$sku = get_post_meta($result->ID, '_sku', true);
+					$stock = get_post_meta($result->ID, '_stock_status', true);
+					$categories = wp_get_post_terms($result->ID, 'product_cat');
+					$rating = get_post_meta($result->ID, '_wc_average_rating', true);
 
-                    $price      = get_post_meta($result->ID,'_regular_price');
-                    $price_sale = get_post_meta($result->ID,'_sale_price');
-                    $currency   = get_woocommerce_currency_symbol();
+					$output .= '<li>';
+					$output .= '<div class="fable_extra_result_link">';
+					$output .= '<div class="product-image"><img src="' . esc_url(get_the_post_thumbnail_url($result->ID, 'thumbnail')) . '"></div>';
+					$output .= '<div class="product-data">';
+					$output .= '<span class="product-title">' . esc_html($result->post_title) . '</span>';
 
-                    $sku   = get_post_meta($result->ID,'_sku');
-                    $stock = get_post_meta($result->ID,'_stock_status');
+					if ($rating) {
+						for ($i = 0; $i < floor($rating); $i++) {
+							$output .= '<div class="product-ratings"><i class="fa fa-star"></i></div>';
+						}
+					}
 
-                    $categories = wp_get_post_terms($result->ID, 'product_cat');
-					//echo print_r($result);die;
-					 
-                    $output .= '<li>';
-                        $output .= '<div class="fable_extra_result_link">';
-								//$output .= '<a href="#" class="product-title">'.$result->post_title.'</a>';
-                            $output .= '<div class="product-image">';
-									// if (!empty($price_sale)) {
-										// if($price_sale[0]>0){
-											// $output .= '<div class="sale-ribbon"><span class="tag-line">'.esc_html__( 'Sale', 'fable-extra' ).'</span></div>';
-										// }
-									// }	
-                                $output .= '<img src="'.esc_url(get_the_post_thumbnail_url($result->ID,'thumbnail')).'">';
-                            $output .= '</div>';
-                            $output .= '<div class="product-data">';
-                                $output .= '<span class="product-title">'.$result->post_title.'</span>';
-								 // if ($average = $result->get_average_rating()) : 
-									  // $output .= '<i class="fa fa-star" title="'.sprintf(__( 'Rated %s out of 5', 'fable-extra' ), $average).'"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'fable-extra' ).'</span></i>'; 
-									// endif;
-									
-								$rating = get_post_meta( $result->ID, '_wc_average_rating', true );
+					$output .= '</div>';
+					$output .= '<div class="price-stock">';
 
-								if ($rating != 0) { 
-									//$output .= number_format((float)$rating, 1, '.', ''); 
-									for($i=0;$i<=$rating;$i++){
-										$output .= '<div class="product-ratings"><i class="fa fa-star"></i></div>';
-									}
-								}	
-								 //$output .= '<p class="product-desc">'.$result->post_excerpt.'</span>';
-                                
-                                // if (!empty($categories)) {
-                                    // $output .= '<div class="product-categories">'.esc_html__( 'Categories: ', 'fable-extra' ).'';
-                                        // foreach ($categories as $category) {
-                                            // if ($category->parent) {
-                                                // $parent = get_term_by('id',$category->parent,'product_cat');
-                                                // $output .= '<span>'.$parent->name.'</span>';
-                                            // }
-                                            // $output .= '<span>'.$category->name.'</span>';
-                                        // }
-                                    // $output .= '</div>';
-                                // }
-                                // if (!empty($sku)) {
-                                    // $output .= '<div class="product-sku">'.esc_html__( 'SKU:', 'fable-extra' ).' '.$sku[0].'</div>';
-                                // }
+					if (!empty($stock)) {
+						$color = $stock === 'instock' ? '#84c224' : '#ff0a0a';
+						$output .= '<div class="product-stock" style="background:' . esc_attr($color) . ';">' . esc_html($stock) . '</div>';
+					}
 
-                                
-								 
-                            $output .= '</div>';
-								
-							$output .= '<div class="price-stock">';
-									
-								if (!empty($stock)) {
-										if($stock[0]=='instock'):
-											$output .= '<div class="product-stock" style="background:#84c224;">'.$stock[0].'</div>';
-										else:
-											$output .= '<div class="product-stock" style="background:#ff0a0a;">'.$stock[0].'</div>';
-										endif;	
-									}
-							$output .= '</div>';
-							
-							if (!empty($price)) {
-                                    $output .= '<div class="product-price">';
-                                        $output .= '<span class="regular-price">'.$price[0].'</span>';
-                                        if (!empty($price_sale)) {
-                                            $output .= '<span class="sale-price">'.$price_sale[0].'</span>';
-                                        }
-                                        $output .= $currency;
-                                    $output .= '</div>';
-                                }else{
-									$output .= '<div class="product-price">';
-                                    $output .= '</div>';
-								}
-								
-							  $output .= '<div class="product-checkout">';
-							   $output .= '<a href="'.esc_url( wc_get_checkout_url() ).'"><i class="fa fa-truck"></i></a>';
-							  $output .= '</div>';							  
-							//$output .= '<div class="product-action"><a href="?add-to-cart=' .$result->ID. '" data-quantity="1" class="button add_to_cart_button ajax_add_to_cart" data-product_id="' .$result->ID . '">Add to cart</a></div>';
-							$output .= '<form class="cart" method="post" enctype="multipart/form-data">
-									<div class="quantity">
-										<input type="number" step="1" min="1" max="" name="quantity" value="1" title="Quantity" class="input-text qty text" size="4" pattern="[0-9]*" inputmode="numeric">
-									</div>
-									
-									 <button type="submit" data-quantity="1" data-product_id="' . $result->ID . '"  class="button alt ajax_add_to_cart add_to_cart_button product_type_simple"><i class="fa fa-shopping-cart wf-mr-2" aria-hidden="true"></i>Add to cart</button>
-								</form>';
-                            $output .= '</div>';
-							
-							
-                    $output .= '</li>';
-					?>
-					<script type="text/javascript">
-					jQuery('input[name="quantity"]').change(function(){
-						var q = jQuery(this).val();
-						jQuery('input[name="quantity"]').parent().next().attr('data-quantity', q);
-					});
-					</script>
-					<?php
-                }
+					$output .= '</div>';
+					$output .= '<div class="product-price">';
+					if (!empty($price)) {
+						$output .= '<span class="regular-price">' . esc_html($price) . '</span>';
+						if (!empty($price_sale)) {
+							$output .= '<span class="sale-price">' . esc_html($price_sale) . '</span>';
+						}
+						$output .= $currency;
+					}
+					$output .= '</div>';
 
-                if (!empty($output)) {
-                    echo $output;
-                }
-            }
-        }
+					$output .= '<div class="product-checkout">';
+					$output .= '<a href="' . esc_url(wc_get_checkout_url()) . '"><i class="fa fa-truck"></i></a>';
+					$output .= '</div>';
 
-        die();
-    }
-    add_action( 'wp_ajax_fable_extra_search_product', 'fable_extra_search_product' );
-    add_action( 'wp_ajax_nopriv_fable_extra_search_product', 'fable_extra_search_product' );
+					$output .= '<form class="cart" method="post" enctype="multipart/form-data">
+						<div class="quantity">
+							<input type="number" step="1" min="1" name="quantity" value="1" title="Quantity" class="input-text qty text" size="4">
+						</div>
+						<button type="submit" data-quantity="1" data-product_id="' . esc_attr($result->ID) . '" class="button alt ajax_add_to_cart add_to_cart_button product_type_simple"><i class="fa fa-shopping-cart wf-mr-2"></i>Add to cart</button>
+					</form>';
+
+					$output .= '</div></li>';
+				}
+
+				echo $output;
+			}
+		}
+
+		wp_die(); // Proper way to terminate AJAX
+	}
+	add_action('wp_ajax_fable_extra_search_product', 'fable_extra_search_product');
+	add_action('wp_ajax_nopriv_fable_extra_search_product', 'fable_extra_search_product');
 
 /*  Widget
 /*-------------------*/

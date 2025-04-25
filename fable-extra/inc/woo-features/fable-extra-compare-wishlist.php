@@ -205,13 +205,18 @@ class FABLE_EXTRA_WC_Compare_Wishlist {
 
 		$data_atts = '';
 
-		if( is_array( $atts ) && ! empty( $atts ) ) {
+		if ( is_array( $atts ) && ! empty( $atts ) ) {
 
 			foreach ( $atts as $key => $attribute ) {
 
-				$data_atts .= ' data-' . $key . '="' . $attribute . '"';
+				// Allow only data-* attributes (and prevent malformed keys)
+				$attribute_key = 'data-' . sanitize_key( $key );
+				$attribute_val = esc_attr( $attribute );
+
+				$data_atts .= ' ' . $attribute_key . '="' . $attribute_val . '"';
 			}
 		}
+
 		return $data_atts;
 	}
 

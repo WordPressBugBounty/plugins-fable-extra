@@ -121,26 +121,26 @@ if( 'EazyShop' == $fable_axtra_activated_theme->name){
 				 array(
 				array(
 					'icon_value'       => 'fas fa-truck',
-					'title'           => esc_html__( 'Fast Delivery', 'shopire' ),
-					'text'            => esc_html__( 'Experience Lightning-Fast Delivery', 'shopire' ),
+					'title'           => esc_html__( 'Fast Delivery', 'fable-extra' ),
+					'text'            => esc_html__( 'Experience Lightning-Fast Delivery', 'fable-extra' ),
 					'id'              => 'shopire_customizer_repeater_footer_top_001'
 				),
 				array(
 					'icon_value'       => 'fas fa-sack-dollar',
-					'title'           => esc_html__( 'Secured Payment', 'shopire' ),
-					'text'            => esc_html__( 'Shop with Confidence', 'shopire' ),
+					'title'           => esc_html__( 'Secured Payment', 'fable-extra' ),
+					'text'            => esc_html__( 'Shop with Confidence', 'fable-extra' ),
 					'id'              => 'shopire_customizer_repeater_footer_top_002'
 				),
 				array(
 					'icon_value'       => 'fas fa-check',
-					'title'           => esc_html__( 'Money Back', 'shopire' ),
-					'text'            => esc_html__( 'Experience Lightning-Fast Delivery', 'shopire' ),
+					'title'           => esc_html__( 'Money Back', 'fable-extra' ),
+					'text'            => esc_html__( 'Experience Lightning-Fast Delivery', 'fable-extra' ),
 					'id'              => 'shopire_customizer_repeater_footer_top_003'
 				),
 				array(
 					'icon_value'       => 'fas fa-headphones',
-					'title'           => esc_html__( '24/7 Support', 'shopire' ),
-					'text'            => esc_html__( 'Always Here for You', 'shopire' ),
+					'title'           => esc_html__( '24/7 Support', 'fable-extra' ),
+					'text'            => esc_html__( 'Always Here for You', 'fable-extra' ),
 					'id'              => 'shopire_customizer_repeater_footer_top_004'
 				)
 			)

@@ -333,18 +333,24 @@ function fable_extra_woowishlist_get_products( $list ) {
  */
 function fable_extra_woowishlist_render( $atts = array() ) {
 
-	$content                = array();
-	$class                  = isset( $atts['class'] ) && ! empty( $atts['class'] ) ? $atts['class'] : '';
-	$fable_extra_wc_compare_wishlist = fable_extra_wc_compare_wishlist();
-	$data_atts              = $fable_extra_wc_compare_wishlist->build_html_dataattributes( $atts );
-	$content[]              = '<div class="woocommerce fable-extra-woowishlist ' . $class . '"' . $data_atts . '>';
-	$content[]              = '<div class="woocommerce fable-extra-woowishlist-wrapper">';
-	$content[]              = fable_extra_woowishlist_render_table( $atts );
-	$content[]              = '</div>';
-	$content[]              = $fable_extra_wc_compare_wishlist->get_loader();
-	$content[]              = '</div>';
+    $content = array();
 
-	return implode( "\n", $content );
+    // Sanitize class attribute
+    $class = isset( $atts['class'] ) && ! empty( $atts['class'] ) ? esc_attr( $atts['class'] ) : '';
+
+    // Filter out only allowed data attributes
+    $fable_extra_wc_compare_wishlist = fable_extra_wc_compare_wishlist();
+    $data_atts = $fable_extra_wc_compare_wishlist->build_html_dataattributes( $atts );
+
+    // Build the HTML output
+    $content[] = '<div class="woocommerce fable-extra-woowishlist ' . $class . '"' . $data_atts . '>';
+    $content[] = '<div class="woocommerce fable-extra-woowishlist-wrapper">';
+    $content[] = fable_extra_woowishlist_render_table( $atts );
+    $content[] = '</div>';
+    $content[] = $fable_extra_wc_compare_wishlist->get_loader();
+    $content[] = '</div>';
+
+    return implode( "\n", $content );
 }
 
 
@@ -358,54 +364,76 @@ function fable_extra_woowishlist_render( $atts = array() ) {
  */
 function fable_extra_woowishlist_render_table( $atts = array() ) {
 
-	$list = fable_extra_woowishlist_get_list();
+    // Get the wishlist list
+    $list = fable_extra_woowishlist_get_list();
 
-	if ( empty( $list ) ) {
+    if ( empty( $list ) ) {
+        return fable_extra_woowishlist_empty_message();
+    }
 
-		return fable_extra_woowishlist_empty_message();
-	}
-	$html      = array();
-	$templater = fable_extra_wc_compare_wishlist_templater();
-	$products  = fable_extra_woowishlist_get_products( $list );
-	$template  = isset( $atts['template'] ) && ! empty( $atts['template'] ) ? $atts['template'] : get_option( 'fable_extra_woowishlist_page_template', 'page.tmpl' );
-	$cols      = isset( $atts['cols'] )     && ! empty( $atts['cols'] )     ? $atts['cols']     : get_option( 'fable_extra_woowishlist_cols', '1' );
-	$cols      = 4 < $cols                                                  ? 4                 : $cols;
-	$template  = $templater->get_template_by_name( $template, 'fable-extra-woowishlist' );
+    $html      = array();
+    $templater = fable_extra_wc_compare_wishlist_templater();
+    $products  = fable_extra_woowishlist_get_products( $list );
 
-	if( ! $template ) {
+    // Define the allowed templates and sanitize the template input
+    $allowed_templates = array( 'page.tmpl', 'grid.tmpl', 'list.tmpl' ); // Define your safe templates
+    $user_template     = isset( $atts['template'] ) ? sanitize_file_name( $atts['template'] ) : '';
+    $template          = in_array( $user_template, $allowed_templates, true )
+                         ? $user_template
+                         : get_option( 'fable_extra_woowishlist_page_template', 'page.tmpl' );
 
-		$template = $templater->get_template_by_name( 'page.tmpl', 'fable-extra-woowishlist' );
-	}
-	$html[] = '<div class="wf-row">';
-	$html[] = sprintf(__('<div class="wf-col-lg-12 wf-col-xs-12"><div class="fable-extra-woowishlist-item wishlist-head"><div><h5>Product Image</h5></div><div class="product-name"><h5>Product Name</h5></div><div class="product-price"><h5>Unit price</h5></div><div class="product-stock-status"><h5>Stock status</h5></div><div class="product-add-to-cart"><h5>Action</h5></div></div></div>', 'fable-extra'));
-	$class  = apply_filters( 'fable_extra_woowishlist_column_class', 'col-lg-' . round( 12 / $cols ) . ' col-xs-12', $cols );
+    // Set the number of columns (validate and sanitize input)
+    $cols = isset( $atts['cols'] ) && ! empty( $atts['cols'] ) ? (int) $atts['cols'] : (int) get_option( 'fable_extra_woowishlist_cols', '1' );
+    $cols = $cols > 4 ? 4 : $cols; // Limit max columns to 4
 
-	while ( $products->have_posts() ) {
+    // Get the template path using the sanitized template name
+    $template_path = $templater->get_template_by_name( $template, 'fable-extra-woowishlist' );
 
-		$products->the_post();
+    // Fallback to default template if the specified template is not found
+    if ( ! $template_path ) {
+        $template_path = $templater->get_template_by_name( 'page.tmpl', 'fable-extra-woowishlist' );
+    }
 
-		global $product;
+    // Begin the output HTML
+    $html[] = '<div class="wf-row">';
+    $html[] = sprintf(
+        __('<div class="wf-col-lg-12 wf-col-xs-12"><div class="fable-extra-woowishlist-item wishlist-head"><div><h5>Product Image</h5></div><div class="product-name"><h5>Product Name</h5></div><div class="product-price"><h5>Unit price</h5></div><div class="product-stock-status"><h5>Stock status</h5></div><div class="product-add-to-cart"><h5>Action</h5></div></div></div>', 'fable-extra')
+    );
 
-		if ( empty( $product ) ) {
+    // Determine the column class based on the number of columns
+    $class = apply_filters( 'fable_extra_woowishlist_column_class', 'col-lg-' . round( 12 / $cols ) . ' col-xs-12', $cols );
 
-			continue;
-		}
-		$pid           = $product->get_id();
-		$pid           = fable_extra_wc_compare_wishlist()->get_original_product_id( $pid );
-		$html[]       = '<div class="' . $class . '">';
-		$html[]       = '<div class="fable-extra-woowishlist-item">';
-		$nonce        = wp_create_nonce( 'fable_extra_woowishlist' . $pid );
-		$dismiss_icon = apply_filters( 'fable_extra_woowishlist_dismiss_icon', '<span class="dashicons dashicons-dismiss"></span>' );
-		$html[]       = '<div class="fable-extra-woowishlist-remove" data-id="' . $pid . '" data-nonce="' . $nonce . '">' . $dismiss_icon . '</div>';
-		$html[]       = $templater->parse_template( $template, $atts );
-		$html[]       = '</div>';
-		$html[]       = '</div>';
-	}
-	wp_reset_query();
+    // Loop through the products and generate the output for each
+    while ( $products->have_posts() ) {
+        $products->the_post();
 
-	$html[] = '</div>';
+        global $product;
 
-	return implode( "\n", $html );
+        if ( empty( $product ) ) {
+            continue;
+        }
+
+        $pid          = $product->get_id();
+        $pid          = fable_extra_wc_compare_wishlist()->get_original_product_id( $pid );
+        $nonce        = wp_create_nonce( 'fable_extra_woowishlist' . $pid );
+        $dismiss_icon = apply_filters( 'fable_extra_woowishlist_dismiss_icon', '<span class="dashicons dashicons-dismiss"></span>' );
+
+        // Output product details and template rendering
+        $html[] = '<div class="' . esc_attr( $class ) . '">';
+        $html[] = '<div class="fable-extra-woowishlist-item">';
+        $html[] = '<div class="fable-extra-woowishlist-remove" data-id="' . esc_attr( $pid ) . '" data-nonce="' . esc_attr( $nonce ) . '">' . $dismiss_icon . '</div>';
+        $html[] = $templater->parse_template( $template_path, $atts );
+        $html[] = '</div>';
+        $html[] = '</div>';
+    }
+
+    // Reset the query to avoid conflicts
+    wp_reset_postdata(); // Replaces deprecated wp_reset_query()
+
+    // Close the row div and return the generated HTML
+    $html[] = '</div>';
+
+    return implode( "\n", $html );
 }
 
 function fable_extra_woowislist_session_to_db() {
