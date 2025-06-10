@@ -3,7 +3,7 @@
 Plugin Name: Fable Extra
 Plugin URI: 
 Description: Used for WP Fable Themes.
-Version: 1.0.7
+Version: 1.0.8
 Author: WP Fable
 Author URI: https://wpfable.com/
 Tested up to: 6.8
@@ -46,6 +46,11 @@ if( !function_exists('fable_extra_init') ){
 		if( 'EazyShop' == $fable_axtra_activated_theme->name){
 			require WPFE_PATH . 'inc/themes/eazyshop/eazyshop.php';
 		}
+		
+		// EasyBuy Theme
+		if( 'EasyBuy' == $fable_axtra_activated_theme->name){
+			require WPFE_PATH . 'inc/themes/easybuy/easybuy.php';
+		}
 	}
 	add_action( 'init', 'fable_extra_init' );
 }
@@ -55,7 +60,7 @@ if( !function_exists('fable_extra_woo_feature') ){
 	function fable_extra_woo_feature(){
 		if(class_exists( 'woocommerce' )):
 			$fable_extra_activated_theme = wp_get_theme(); // gets the current theme
-			$fable_extra_themes = array('Shopire','Shopire Child','MiniCart','EazyShop');
+			$fable_extra_themes = array('Shopire','Shopire Child','MiniCart','EazyShop','EasyBuy');
 			if (in_array($fable_extra_activated_theme->name, $fable_extra_themes)){
 				$woo_features = array(
 					'compare-wishlist',

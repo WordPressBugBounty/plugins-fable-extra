@@ -51,7 +51,7 @@
 * Slider Default
 */
 $fable_axtra_activated_theme = wp_get_theme(); // gets the current theme
-if( 'EazyShop' == $fable_axtra_activated_theme->name){
+if( 'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name){
  function shopire_slider_data_options_default() {
 	return apply_filters(
 		'shopire_slider_data_options_default', json_encode(
@@ -109,6 +109,48 @@ if( 'EazyShop' == $fable_axtra_activated_theme->name){
 		)
 	);
 }		
+}
+
+
+/*
+ *
+ * Information Default
+ */
+ function shopire_information_options_default() {
+	return apply_filters(
+		'shopire_information_options_default', json_encode(
+				 array(
+				array(
+					'icon_value'       => 'fas fa-truck',
+					'title'           => esc_html__( 'Fast Delivery', 'fable-extra' ),
+					'text'            => esc_html__( 'Experience Lightning-Fast Delivery', 'fable-extra' ),
+					'link'	  =>  '#',
+					'id'              => 'shopire_customizer_repeater_information_001'
+				),
+				array(
+					'icon_value'       => 'fas fa-sack-dollar',
+					'title'           => esc_html__( 'Secured Payment', 'fable-extra' ),
+					'text'            => esc_html__( 'Shop with Confidence', 'fable-extra' ),
+					'link'	  =>  '#',
+					'id'              => 'shopire_customizer_repeater_information_002'
+				),
+				array(
+					'icon_value'       => 'fas fa-check',
+					'title'           => esc_html__( 'Money Back', 'fable-extra' ),
+					'text'            => esc_html__( 'Experience Lightning-Fast Delivery', 'fable-extra' ),
+					'link'	  =>  '#',
+					'id'              => 'shopire_customizer_repeater_information_003'
+				),
+				array(
+					'icon_value'       => 'fas fa-headphones',
+					'title'           => esc_html__( '24/7 Support', 'fable-extra' ),
+					'text'            => esc_html__( 'Always Here for You', 'fable-extra' ),
+					'link'	  =>  '#',
+					'id'              => 'shopire_customizer_repeater_information_004'
+				)
+			)
+		)
+	);
 }
 
 /*
