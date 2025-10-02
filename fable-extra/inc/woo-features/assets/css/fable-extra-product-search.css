@@ -97,6 +97,14 @@
     font-weight: 500;
 }
 
+.search-results.woocommerce span.product-title a {
+    text-decoration: none;
+}
+
+.search-results.woocommerce span.product-title a:not(:hover, :focus) {
+    color: var(--wf-secondary-color);
+}
+
 .search-results .product-desc {
     margin-bottom: 0;
 }

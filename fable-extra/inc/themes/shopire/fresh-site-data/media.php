@@ -8,6 +8,8 @@ $site_logo = WPFE_URL .'inc/themes/eazyshop/assets/images/logo.png';
 $site_logo = WPFE_URL .'inc/themes/easybuy/assets/images/logo.png';
 }elseif ( 'eKart' == $fable_extra_activated_theme->name){
 $site_logo = WPFE_URL .'inc/themes/ekart/assets/images/logo.png';
+}elseif ( 'ShopWay' == $fable_extra_activated_theme->name){
+$site_logo = WPFE_URL .'inc/themes/shopway/assets/images/logo.png';
 }else{
 $site_logo = WPFE_URL .'inc/themes/shopire/assets/images/logo.png';
 }		

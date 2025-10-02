@@ -84,6 +84,23 @@ if( 'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_ax
 		)
 	);
 }
+}elseif('ShopWay' == $fable_axtra_activated_theme->name){
+	function shopire_slider_data_options_default() {
+	return apply_filters(
+		'shopire_slider_data_options_default', json_encode(
+				 array(
+				array(
+					'image_url'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/banner-04.png'),
+					'title'           => esc_html__( '60% OFF', 'fable-extra' ),
+					'subtitle'         => esc_html__( 'Shop Smarter. <br>Live Better.', 'fable-extra' ),
+					'text2'	  =>  esc_html__( 'Shop Now', 'fable-extra' ),
+					'link'	  =>  esc_html__( '#', 'fable-extra' ),
+					'id'              => 'shopire_customizer_repeater_slider_data_001'
+				)
+			)
+		)
+	);
+}
 }else{
    function shopire_slider_data_options_default() {
 	return apply_filters(

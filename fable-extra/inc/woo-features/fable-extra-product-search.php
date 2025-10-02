@@ -201,7 +201,7 @@ add_action( 'wp_enqueue_scripts', 'fable_extra_product_search_scripts_styles' );
 					$output .= '<div class="fable_extra_result_link">';
 					$output .= '<div class="product-image"><img src="' . esc_url(get_the_post_thumbnail_url($result->ID, 'thumbnail')) . '"></div>';
 					$output .= '<div class="product-data">';
-					$output .= '<span class="product-title">' . esc_html($result->post_title) . '</span>';
+					$output .= '<span class="product-title"><a href="'.esc_url(get_the_permalink($result->ID)).'">'.$result->post_title.'</a></span>';
 
 					if ($rating) {
 						for ($i = 0; $i < floor($rating); $i++) {
