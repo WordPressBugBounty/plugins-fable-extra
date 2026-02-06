@@ -83,7 +83,7 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 	
 	// Slider 
 	$fable_axtra_activated_theme = wp_get_theme(); // gets the current theme
-	if( 'MiniCart' == $fable_axtra_activated_theme->name  ||  'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'ShopWay' == $fable_axtra_activated_theme->name){
+	if( 'MiniCart' == $fable_axtra_activated_theme->name  ||  'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'ShopWay' == $fable_axtra_activated_theme->name  ||  'BuyCart' == $fable_axtra_activated_theme->name){
 		$wp_customize->add_setting( 'shopire_slider_option', 
 			array(
 			 'sanitize_callback' => 'shopire_repeater_sanitize',
@@ -162,7 +162,7 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 		);
 	}
 	
-if( 'MiniCart' == $fable_axtra_activated_theme->name  ||  'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'ShopWay' == $fable_axtra_activated_theme->name){
+if( 'MiniCart' == $fable_axtra_activated_theme->name  ||  'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'ShopWay' == $fable_axtra_activated_theme->name  ||  'BuyCart' == $fable_axtra_activated_theme->name){
 		// Slider Data
 		$wp_customize->add_setting( 'shopire_slider_data_option', 
 			array(
@@ -213,11 +213,16 @@ if( 'MiniCart' == $fable_axtra_activated_theme->name  ||  'EazyShop' == $fable_a
 	}	
 	}
 	// slider opacity
+	if( 'BuyCart' == $fable_axtra_activated_theme->name){
+		$opacity='0.7';
+	}else{
+		$opacity='0';
+	}	
 	if ( class_exists( 'Shopire_Customizer_Range_Control' ) ) {
 		$wp_customize->add_setting(
 			'shopire_slider_opacity',
 			array(
-				'default'	      => '0',
+				'default'	      => $opacity,
 				'capability'     	=> 'edit_theme_options',
 				'sanitize_callback' => 'shopire_sanitize_range_value',
 				'priority' => 7,

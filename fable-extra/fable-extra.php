@@ -3,10 +3,10 @@
 Plugin Name: Fable Extra
 Plugin URI: 
 Description: Used for WP Fable Themes.
-Version: 1.0.10
+Version: 1.0.11
 Author: WP Fable
 Author URI: https://wpfable.com/
-Tested up to: 6.8
+Tested up to: 6.9
 Requires at least: 5.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -61,6 +61,11 @@ if( !function_exists('fable_extra_init') ){
 		if( 'ShopWay' == $fable_axtra_activated_theme->name){
 			require WPFE_PATH . 'inc/themes/shopway/shopway.php';
 		}
+		
+		// BuyCart Theme
+		if( 'BuyCart' == $fable_axtra_activated_theme->name){
+			require WPFE_PATH . 'inc/themes/buycart/buycart.php';
+		}
 	}
 	add_action( 'init', 'fable_extra_init' );
 }
@@ -70,7 +75,7 @@ if( !function_exists('fable_extra_woo_feature') ){
 	function fable_extra_woo_feature(){
 		if(class_exists( 'woocommerce' )):
 			$fable_extra_activated_theme = wp_get_theme(); // gets the current theme
-			$fable_extra_themes = array('Shopire','Shopire Child','MiniCart','EazyShop','EasyBuy','eKart','ShopWay');
+			$fable_extra_themes = array('Shopire','Shopire Child','MiniCart','EazyShop','EasyBuy','eKart','ShopWay','BuyCart');
 			if (in_array($fable_extra_activated_theme->name, $fable_extra_themes)){
 				$woo_features = array(
 					'compare-wishlist',

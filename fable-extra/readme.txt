@@ -2,9 +2,9 @@
 Contributors: WP Fable
 Tags: import, content, demo, data, widgets, settings, redux, theme options
 Requires at least: 5.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 1.0.10
+Stable tag: 1.0.11
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -29,6 +29,9 @@ Used for WP Fable Themes.
 3. Activate 'Fable Extra' from your Plugins page.
 
 == Changelog ==
+
+= 1.0.11 =
+* Add BuyCart Theme Functionality
 
 = 1.0.10 =
 * Add ShopWay Theme Functionality

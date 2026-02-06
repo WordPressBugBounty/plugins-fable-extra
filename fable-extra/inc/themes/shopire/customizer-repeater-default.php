@@ -1,9 +1,53 @@
 <?php
+$fable_axtra_activated_theme = wp_get_theme(); // gets the current theme
 /*
  *
  * Slider Default
  */
+if( 'BuyCart' == $fable_axtra_activated_theme->name){ 
  function shopire_slider_options_default() {
+	return apply_filters(
+		'shopire_slider_options_default', json_encode(
+				 array(
+				array(
+					'image_url'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/slider04.png'),
+					'image_url2'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/banner-img-1.png'),
+					'title'           => esc_html__( 'Mega Sale Madness! Enjoy 30% off', 'fable-extra' ),
+					'subtitle'         => esc_html__( 'Mobile Madness - Save Big Today!', 'fable-extra' ),
+					'text'            => esc_html__( 'New Electronics Deals Added! Explore the latest discounts on cameras, wearables, and smart home devices.', 'fable-extra' ),
+					'text2'	  =>  esc_html__( 'Shop Now', 'fable-extra' ),
+					'link'	  =>  esc_html__( '#', 'fable-extra' ),
+					"slide_align" => "left", 
+					'id'              => 'shopire_customizer_repeater_slider_001',
+				),
+				array(
+					'image_url'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/slider05.png'),
+					'image_url2'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/banner-img-2.png'),
+					'title'           => esc_html__( 'Mega Sale Madness! Enjoy 50% off', 'fable-extra' ),
+					'subtitle'         => esc_html__( 'Wrist Tech Marvels on a Budget!', 'fable-extra' ),
+					'text'            => esc_html__( 'New Electronics Deals Added! Explore the latest discounts on cameras, wearables, and smart home devices.', 'fable-extra' ),
+					'text2'	  =>  esc_html__( 'Shop Now', 'fable-extra' ),
+					'link'	  =>  esc_html__( '#', 'fable-extra' ),
+					"slide_align" => "left", 
+					'id'              => 'shopire_customizer_repeater_slider_002',
+				),
+				array(
+					'image_url'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/slider02.png'),
+					'image_url2'       => esc_url(WPFE_URL . '/inc/themes/shopire/assets/images/banner-img-3.png'),
+					'title'           => esc_html__( 'Mega Sale Madness! Enjoy 30% off', 'fable-extra' ),
+					'subtitle'         => esc_html__( 'Mobile Madness - Save Big Today!', 'fable-extra' ),
+					'text'            => esc_html__( 'New Electronics Deals Added! Explore the latest discounts on cameras, wearables, and smart home devices.', 'fable-extra' ),
+					'text2'	  =>  esc_html__( 'Shop Now', 'fable-extra' ),
+					'link'	  =>  esc_html__( '#', 'fable-extra' ),
+					"slide_align" => "left", 
+					'id'              => 'shopire_customizer_repeater_slider_003',
+				)
+			)
+		)
+	);
+}
+}else{
+  function shopire_slider_options_default() {
 	return apply_filters(
 		'shopire_slider_options_default', json_encode(
 				 array(
@@ -44,14 +88,13 @@
 		)
 	);
 }
-
+}
 
 /*
 *
 * Slider Default
 */
-$fable_axtra_activated_theme = wp_get_theme(); // gets the current theme
-if( 'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name){
+if( 'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'BuyCart' == $fable_axtra_activated_theme->name){
  function shopire_slider_data_options_default() {
 	return apply_filters(
 		'shopire_slider_data_options_default', json_encode(
