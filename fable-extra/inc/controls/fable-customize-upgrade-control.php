@@ -52,7 +52,11 @@ class Fable_Extra_Customize_Upgrade_Control extends WP_Customize_Control {
 		elseif('ShopWay' == $fable_activated_theme->name):	
 			$upgrade_to_pro_link = 'https://wpfable.com/themes/shopway-premium/';	
 		elseif('BuyCart' == $fable_activated_theme->name):	
-			$upgrade_to_pro_link = 'https://wpfable.com/themes/buycart-premium/';	
+			$upgrade_to_pro_link = 'https://wpfable.com/themes/buycart-premium/';
+		elseif('eShopKit' == $fable_activated_theme->name):	
+			$upgrade_to_pro_link = 'https://wpfable.com/themes/eshopkit-premium/';	
+		elseif('ShopZone' == $fable_activated_theme->name):	
+			$upgrade_to_pro_link = 'https://wpfable.com/themes/shopzone-premium/';	
 		else:	
 			$upgrade_to_pro_link = 'https://wpfable.com/themes/shopire-premium/';
 		endif;	

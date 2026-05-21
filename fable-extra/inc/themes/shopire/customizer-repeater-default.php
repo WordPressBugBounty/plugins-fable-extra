@@ -94,7 +94,7 @@ if( 'BuyCart' == $fable_axtra_activated_theme->name){
 *
 * Slider Default
 */
-if( 'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'BuyCart' == $fable_axtra_activated_theme->name){
+if( 'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'BuyCart' == $fable_axtra_activated_theme->name  ||  'ShopZone' == $fable_axtra_activated_theme->name){
  function shopire_slider_data_options_default() {
 	return apply_filters(
 		'shopire_slider_data_options_default', json_encode(

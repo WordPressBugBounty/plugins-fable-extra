@@ -12,6 +12,8 @@ $site_logo = WPFE_URL .'inc/themes/ekart/assets/images/logo.png';
 $site_logo = WPFE_URL .'inc/themes/shopway/assets/images/logo.png';
 }elseif ( 'BuyCart' == $fable_extra_activated_theme->name){
 $site_logo = WPFE_URL .'inc/themes/buycart/assets/images/logo.png';
+}elseif ( 'eShopKit' == $fable_extra_activated_theme->name){
+$site_logo = WPFE_URL .'inc/themes/eshopkit/assets/images/logo.png';
 }else{
 $site_logo = WPFE_URL .'inc/themes/shopire/assets/images/logo.png';
 }		
