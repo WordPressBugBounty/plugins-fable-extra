@@ -19,8 +19,8 @@ require WPFE_PATH . 'inc/themes/shopire/customizer/shopire-selective-partial.php
 if (! function_exists('fable_extra_shopire_frontpage_sections')) :
 	function fable_extra_shopire_frontpage_sections()
 	{
-		require WPFE_PATH . 'inc/themes/shopire/front/section-product-cat.php';
-		require WPFE_PATH . 'inc/themes/buycart/front/section-slider.php';
+		require WPFE_PATH . 'inc/themes/shopzone/front/section-product-cat.php';
+		require WPFE_PATH . 'inc/themes/shopzone/front/section-slider.php';
 		require WPFE_PATH . 'inc/themes/shopway/front/section-information.php';
 		require WPFE_PATH . 'inc/themes/shopire/front/section-popular-product.php';
 		require WPFE_PATH . 'inc/themes/shopire/front/section-cta.php';
@@ -28,3 +28,19 @@ if (! function_exists('fable_extra_shopire_frontpage_sections')) :
 	}
 	add_action('Fable_Extra_Shopire_frontpage', 'fable_extra_shopire_frontpage_sections');
 endif;
+
+
+function fable_extra_shopzone_customize_setting( $wp_customize ) {
+	$wp_customize->add_section(
+		'product_cat_options', array(
+			'title' => esc_html__( 'Product Category Section', 'fable-extra' ),
+			'priority' => 0,
+			'panel' => 'shopire_frontpage_options',
+		)
+	);
+	$wp_customize->remove_control('shopire_product_cat_header_options');
+	$wp_customize->remove_control('shopire_product_cat_ttl');
+	$wp_customize->remove_control('shopire_product_cat_btn_lbl');
+	$wp_customize->remove_control('shopire_product_cat_btn_url');
+}
+add_action( 'customize_register', 'fable_extra_shopzone_customize_setting',99 );

@@ -83,7 +83,7 @@ $selective_refresh = isset( $wp_customize->selective_refresh ) ? 'postMessage' :
 	
 	// Slider 
 	$fable_axtra_activated_theme = wp_get_theme(); // gets the current theme
-	if( 'MiniCart' == $fable_axtra_activated_theme->name  ||  'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'ShopWay' == $fable_axtra_activated_theme->name  ||  'BuyCart' == $fable_axtra_activated_theme->name  ||  'eShopKit' == $fable_axtra_activated_theme->name  ||  'ShopZone' == $fable_axtra_activated_theme->name){
+	if( 'MiniCart' == $fable_axtra_activated_theme->name  ||  'EazyShop' == $fable_axtra_activated_theme->name  ||  'EasyBuy' == $fable_axtra_activated_theme->name  ||  'ShopWay' == $fable_axtra_activated_theme->name  ||  'BuyCart' == $fable_axtra_activated_theme->name  ||  'eShopKit' == $fable_axtra_activated_theme->name){
 		$wp_customize->add_setting( 'shopire_slider_option', 
 			array(
 			 'sanitize_callback' => 'shopire_repeater_sanitize',
